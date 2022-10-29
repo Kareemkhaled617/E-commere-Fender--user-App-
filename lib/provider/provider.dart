@@ -36,11 +36,17 @@ class ProviderController extends ChangeNotifier {
   Locale? lang = const Locale('ar');
   List homeServices = [];
   int? module;
+  bool end=false;
 
   void changeCat(int mod1) {
     module = mod1;
     notifyListeners();
   }
+  void endValue(bool val){
+    end = val;
+    notifyListeners();
+  }
+
 
   search(double lat, double long, String search, String token) async {
     String url =
@@ -84,7 +90,7 @@ class ProviderController extends ChangeNotifier {
     long = lastPosition.longitude;
     print(lat);
     print(long);
-    print('Get Location');
+    end=false;
     notifyListeners();
     return lastPosition;
   }

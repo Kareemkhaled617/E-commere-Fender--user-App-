@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:test_provider/ui/home/widgets/lock_button.dart';
-import 'package:test_provider/ui/home/widgets/title.dart';
 
 
 class LockScreen extends StatefulWidget {
@@ -16,17 +16,15 @@ class _LockScreenState extends State<LockScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black45,
+      backgroundColor: Colors.white.withOpacity(0.5),
       body: Center(
         child: Column(
           children: [
             const SizedBox(
               height: 30,
             ),
-            const LockScreenTitle(
-              upperTitle: "Welcome",
-              title: "Login",
-            ),
+        Lottie.network(
+            'https://assets8.lottiefiles.com/packages/lf20_jcikwtux.json'),
             Expanded(
               child: Container(),
             ),
@@ -41,8 +39,8 @@ class _LockScreenState extends State<LockScreen> {
             const Text(
               "Tap to Login",
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
+                color: Colors.blueGrey,
+                fontSize: 18.0,
                 fontWeight: FontWeight.w900,
               ),
             ),

@@ -10,30 +10,30 @@ class CenterNextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _topMoveAnimation =
-        Tween<Offset>(begin: Offset(0, 5), end: Offset(0, 0))
+    final topMoveAnimation =
+        Tween<Offset>(begin: const Offset(0, 5), end: const Offset(0, 0))
             .animate(CurvedAnimation(
       parent: animationController,
-      curve: Interval(
+      curve: const Interval(
         0.0,
         0.2,
         curve: Curves.fastOutSlowIn,
       ),
     ));
-    final _signUpMoveAnimation =
+    final signUpMoveAnimation =
         Tween<double>(begin: 0, end: 1.0).animate(CurvedAnimation(
       parent: animationController,
-      curve: Interval(
+      curve: const Interval(
         0.6,
         0.8,
         curve: Curves.fastOutSlowIn,
       ),
     ));
-    final _loginTextMoveAnimation =
-        Tween<Offset>(begin: Offset(0, 5), end: Offset(0, 0))
+    final loginTextMoveAnimation =
+        Tween<Offset>(begin: const Offset(0, 5), end: const Offset(0, 0))
             .animate(CurvedAnimation(
       parent: animationController,
-      curve: Interval(
+      curve: const Interval(
         0.6,
         0.8,
         curve: Curves.fastOutSlowIn,
@@ -48,7 +48,7 @@ class CenterNextButton extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SlideTransition(
-            position: _topMoveAnimation,
+            position: topMoveAnimation,
             child: AnimatedBuilder(
               animation: animationController,
               builder: (context, child) => AnimatedOpacity(
@@ -56,29 +56,29 @@ class CenterNextButton extends StatelessWidget {
                         animationController.value <= 0.6
                     ? 1
                     : 0,
-                duration: Duration(milliseconds: 480),
+                duration: const Duration(milliseconds: 480),
                 child: _pageView(),
               ),
             ),
           ),
           SlideTransition(
-            position: _topMoveAnimation,
+            position: topMoveAnimation,
             child: AnimatedBuilder(
               animation: animationController,
               builder: (context, child) => Padding(
                 padding: EdgeInsets.only(
-                    bottom: 38 - (38 * _signUpMoveAnimation.value)),
+                    bottom: 38 - (38 * signUpMoveAnimation.value)),
                 child: Container(
                   height: 58,
-                  width: 58 + (200 * _signUpMoveAnimation.value),
+                  width: 58 + (200 * signUpMoveAnimation.value),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
-                        8 + 32 * (1 - _signUpMoveAnimation.value)),
-                    color: Color(0xff132137),
+                        8 + 32 * (1 - signUpMoveAnimation.value)),
+                    color: const Color(0xff132137),
                   ),
                   child: PageTransitionSwitcher(
-                    duration: Duration(milliseconds: 480),
-                    reverse: _signUpMoveAnimation.value < 0.7,
+                    duration: const Duration(milliseconds: 480),
+                    reverse: signUpMoveAnimation.value < 0.7,
                     transitionBuilder: (
                       Widget child,
                       Animation<double> animation,
@@ -86,24 +86,24 @@ class CenterNextButton extends StatelessWidget {
                     ) {
                       return SharedAxisTransition(
                         fillColor: Colors.transparent,
-                        child: child,
                         animation: animation,
                         secondaryAnimation: secondaryAnimation,
                         transitionType: SharedAxisTransitionType.vertical,
+                        child: child,
                       );
                     },
-                    child: _signUpMoveAnimation.value > 0.7
+                    child: signUpMoveAnimation.value > 0.7
                         ? InkWell(
-                            key: ValueKey('Sign Up button'),
+                            key: const ValueKey('Sign Up button'),
                             onTap: onNextClick,
                             child: Padding(
-                              padding: EdgeInsets.only(left: 16.0, right: 16.0),
+                              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: [
+                                children: const [
                                   Text(
-                                    'Sign Up',
+                                    'Finish',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 18,
@@ -117,9 +117,9 @@ class CenterNextButton extends StatelessWidget {
                             ),
                           )
                         : InkWell(
-                            key: ValueKey('next button'),
+                            key: const ValueKey('next button'),
                             onTap: onNextClick,
-                            child: Padding(
+                            child: const Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Icon(Icons.arrow_forward_ios_rounded,
                                   color: Colors.white),
@@ -133,28 +133,8 @@ class CenterNextButton extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: SlideTransition(
-              position: _loginTextMoveAnimation,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Already have an account? ',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  Text(
-                    'Login',
-                    style: TextStyle(
-                      color: Color(0xff132137),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+              position: loginTextMoveAnimation,
+              child: Container(),
             ),
           ),
         ],
@@ -184,12 +164,12 @@ class CenterNextButton extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(4),
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 480),
+                duration: const Duration(milliseconds: 480),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(32),
                   color: _selectedIndex == i
-                      ? Color(0xff132137)
-                      : Color(0xffE3E4E4),
+                      ? const Color(0xff132137)
+                      : const Color(0xffE3E4E4),
                 ),
                 width: 10,
                 height: 10,

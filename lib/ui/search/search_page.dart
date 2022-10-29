@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:test_provider/ui/custom_image.dart';
 import 'package:test_provider/ui/search/taps/service_tap.dart';
 import 'package:test_provider/ui/search/taps/shop_tap.dart';
+
+import '../../provider/login_controller.dart';
+import '../category_item.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key, required this.token, required this.search})
@@ -16,30 +21,25 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
-  final _selectedColor = const Color(0xff1a73e8);
   int index = 0;
-  final _tabs = [
-    const Tab(
-      child: CustomImage(
-        'https://ibtikarsoft.net/la2iny_V1/public/app-assets/imgs/search_icons/markets.png',
-        width: 50,
-        height: 50,
+  int selectedCategoryIndex = 0;
 
-      ),
-    ),
-    const Tab(  child: CustomImage(
+  final cat = [
+    {
+      'name': 'Shop',
+      'image':
+      'https://ibtikarsoft.net/la2iny_V1/public/app-assets/imgs/search_icons/markets.png',
+    },
+    {
+      'name': 'Services',
+      'image':
       'https://ibtikarsoft.net/la2iny_V1/public/app-assets/imgs/search_icons/services.png',
-      width: 50,
-      height: 50,
-
-    ),),
-    const Tab(  child: CustomImage(
+    },
+    {
+      'name': 'Product',
+      'image':
       'https://ibtikarsoft.net/la2iny_V1/public/app-assets/imgs/search_icons/products.png',
-      width: 50,
-      height: 50,
-
-    ),),
+    },
   ];
 
   @override
@@ -56,98 +56,66 @@ class _SearchPageState extends State<SearchPage>
 
   @override
   Widget build(BuildContext context) {
-    final pages = [
-      ShopTap(
-        token: widget.token,
-        search: widget.search,
-      ),
-      ServicesTap(
-        token: widget.token,
-        search: widget.search,
-      ),
+    var token = context.read<LoginController>().userData['token'] ?? '';
+    final List<Widget> pages = [
+      ShopTap(token: token, search:widget.search,),
+      ServicesTap(token: token, search:widget.search,),
     ];
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: _selectedColor,
+        leading: IconButton(icon:  Icon(Icons.arrow_back,color:Colors.blueGrey.shade400,),onPressed: (){
+          Navigator.of(context).pop();
+        },),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        title: Text('Result',style: GoogleFonts.acme(
+          color: Colors.blueGrey.shade400,
+          fontSize: 28,
+          fontWeight: FontWeight.w500
+        ),),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          child: Column(children: [
-            Container(
-              height: kToolbarHeight - 8.0,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: TabBar(
-                controller: _tabController,
-                indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: _selectedColor),
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                tabs: _tabs,
-                onTap: (value) {
-                  setState(() {
-                    index = value;
-                  });
-                },
-              ),
+          child: Column(
+              children: [
+                const SizedBox(height: 20,),
+                buildCategory(cat),
+                IndexedStack(
+                  index: selectedCategoryIndex,
+                  children: pages,
+                ),
+              ]),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCategory(List list) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(15, 5, 7, 20),
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(
+          list.length,
+              (index) => Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: CategoryItem(
+              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+              data: list[index],
+              isSelected: index == selectedCategoryIndex,
+              onTap: () {
+                setState(() {
+                  selectedCategoryIndex = index;
+                });
+              },
             ),
-            IndexedStack(
-              index: index,
-              children: pages,
-            ),
-          ]),
+          ),
         ),
       ),
     );
   }
 }
 
-class MaterialDesignIndicator extends Decoration {
-  final double indicatorHeight;
-  final Color indicatorColor;
 
-  const MaterialDesignIndicator({
-    required this.indicatorHeight,
-    required this.indicatorColor,
-  });
-
-  @override
-  _MaterialDesignPainter createBoxPainter([VoidCallback? onChanged]) {
-    return _MaterialDesignPainter(this, onChanged);
-  }
-}
-
-class _MaterialDesignPainter extends BoxPainter {
-  final MaterialDesignIndicator decoration;
-
-  _MaterialDesignPainter(this.decoration, VoidCallback? onChanged)
-      : super(onChanged);
-
-  @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
-    assert(configuration.size != null);
-
-    final Rect rect = Offset(
-          offset.dx,
-          configuration.size!.height - decoration.indicatorHeight,
-        ) &
-        Size(configuration.size!.width, decoration.indicatorHeight);
-
-    final Paint paint = Paint()
-      ..color = decoration.indicatorColor
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRRect(
-      RRect.fromRectAndCorners(
-        rect,
-        topRight: Radius.circular(8),
-        topLeft: Radius.circular(8),
-      ),
-      paint,
-    );
-  }
-}

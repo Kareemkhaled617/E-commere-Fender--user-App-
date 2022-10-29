@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_provider/provider/provider.dart';
 import 'package:test_provider/ui/recipe_item.dart';
@@ -94,7 +95,8 @@ class _AllShopsState extends State<AllShops> {
                         ),),
                     );
                   }else{
-                    return const Center(child: CircularProgressIndicator(),);
+                    return  Lottie.network(
+                        'https://assets5.lottiefiles.com/packages/lf20_eMqO0m.json');
                   }
                 },),
           ),

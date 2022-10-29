@@ -22,12 +22,11 @@ class HomeProvider with ChangeNotifier {
 
   double _totalPrice = 0.0;
   List<Sales> dash=[];
-  final List<Sales> _smartphoneData = [
-    Sales("2014", 5),
+  final List<Sales> smartphoneData = [
 
   ];
 
-  final List<Sales> _refrigeratorData = [
+  final List<Sales> refrigeratorData = [
     Sales("2014", 30),
 
   ];
@@ -128,19 +127,15 @@ class HomeProvider with ChangeNotifier {
     if (res.statusCode == 200) {
       List data = json.decode(res.body);
       series = data;
-      // data.forEach((element) {
-      //   series.add(charts.Series(
-      //       id: element['name'],
-      //       domainFn: (Sales sales, _) => sales.year,
-      //       measureFn: (Sales sales, _) => sales.sale,
-      //       data: _smartphoneData
-      //   ));
-      // });
-
+      series.forEach((element) {
+        element['data'].forEach((el){
+          smartphoneData.add(Sales(el['name'], el['count']));
+        });
+      });
     } else {
       print("Error");
     }
-    return series;
+    return smartphoneData;
   }
 
 

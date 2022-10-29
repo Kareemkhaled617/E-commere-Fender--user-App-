@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../app_theme.dart';
 import '../../component/custom_drawer/drawer_user_controller.dart';
 import '../../component/custom_drawer/home_drawer.dart';
 import '../../feedback_screen.dart';
 import '../../help_screen.dart';
 import '../../invite_friend_screen.dart';
-import '../../provider/login_controller.dart';
-import '../drawer_ui/drawerScreen.dart';
 import '../drawer_ui/homeScreen.dart';
 import '../home_services.dart';
 
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -34,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: DrawerUserController(
         screenIndex: drawerIndex,
         drawerWidth: MediaQuery.of(context).size.width * 0.75,
@@ -44,13 +43,7 @@ class _HomePageState extends State<HomePage> {
         screenView: screenView,
         //we replace screen view as we need on navigate starting screens like MyHomePage, HelpScreen, FeedbackScreen, etc...
       ),
-      // Stack(
-      //   children:   [
-      //     const DrawerScreen(),
-      //     HomeScreen()
-      //
-      //   ],
-      // ),
+
 
     );
   }

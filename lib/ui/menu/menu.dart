@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_provider/provider/login_controller.dart';
 import 'package:test_provider/provider/provider.dart';
@@ -33,14 +34,12 @@ class Menu extends StatefulWidget {
   State<Menu> createState() => _MenuState();
 }
 
-class _MenuState extends State<Menu>  {
-
+class _MenuState extends State<Menu> {
   int selectedCategoryIndex = 0;
   String idCat = '0';
   String search = '';
   bool isLoadingVertical = false;
   int numOfPage = 1;
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,31 +48,31 @@ class _MenuState extends State<Menu>  {
         return FutureBuilder(
             future: val.getDataUser(),
             builder: (context, snapshot) {
-              final Map m = val.userData ;
+              final Map m = val.userData;
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding:
-                      const EdgeInsets.only(top: 19, left: 15, right: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => screen_location(
-                                    get: false,
-                                  )));
-                            },
-                            child: Row(
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => screen_location(
+                              get: false,
+                            )));
+                      },
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(top: 19, left: 15, right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
                                 Flexible(
                                   child: Text('  Address',
                                       style: TextStyle(
                                         fontSize: 18,
-                                        color: Colors.grey.shade700,
+                                        color: Theme.of(context).primaryColor,
                                         fontWeight: FontWeight.w700,
                                       ),
                                       maxLines: 1,
@@ -88,20 +87,20 @@ class _MenuState extends State<Menu>  {
                                 )
                               ],
                             ),
-                          ),
-                          SizedBox(
-                            height: 60,
-                            width: 300,
-                            child: Text(
-                                context.watch<ProviderController>().address,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.blueGrey)),
-                          ),
-                        ],
+                            SizedBox(
+                              height: 60,
+                              width: 300,
+                              child: Text(
+                                  context.watch<ProviderController>().address,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Theme.of(context).splashColor)),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     PreferredSize(
@@ -117,9 +116,9 @@ class _MenuState extends State<Menu>  {
                                 Expanded(
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: kSecondaryColor.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
+                                        color: kSecondaryColor.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(15),
+                                        ),
                                     child: TextField(
                                       onChanged: (value) {
                                         setState(() {
@@ -145,11 +144,10 @@ class _MenuState extends State<Menu>  {
                                   press: () {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
-                                        builder: (context) => SearchPage(
-                                          token: m['token']??'',
-                                          search:search,
-                                        )));
-
+                                            builder: (context) => SearchPage(
+                                                  token: m['token'] ?? '',
+                                                  search: search,
+                                                )));
                                   },
                                 ),
                               ],
@@ -162,63 +160,73 @@ class _MenuState extends State<Menu>  {
                     const SizedBox(height: 30),
                     Consumer<ProviderController>(
                         builder: (context, value, child) {
-                          return FutureBuilder(
-                              future: value.getHomeBanner(
-                                  value.lat!, value.long!, m['token'] ?? '',idCat),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData &&
-                                    value.homeBanner.isNotEmpty) {
-                                  final list = snapshot.data as List;
-                                  return CarouselSlider(
-                                    items:  list.map((i) {
-                                      return Builder(
-                                        builder: (BuildContext context) {
-                                          return Container(
-                                              width: MediaQuery.of(context).size.width,
-                                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                              decoration: const BoxDecoration(color: Colors.amber),
-                                              child: GestureDetector(
-                                                  child: Image.network(i['image']),
-                                                  onTap: () {
-                                                    if(i['type'] == 'shop'){
-                                                      Navigator.of(context)
-                                                          .push(MaterialPageRoute(
-                                                          builder: (context) => Shop(
-                                                            id: '${i['shop']}',
-                                                            token:
-                                                            m['token'] ?? '',
-                                                          )));
-                                                    }else{
-                                                      Navigator.of(context).push(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  ServiceInfoInShop(
-                                                                    shopId: '${i['shop']}',
-                                                                    token:  m['token'] ?? '',
-                                                                    serviceId: '${i['service']}'
-                                                                    ,
-                                                                  )));
-                                                    }
-                                                  }));
-                                        },
-                                      );
-                                    }).toList(),
-                                    options: CarouselOptions(
-                                        aspectRatio: 3,
-                                        viewportFraction: 0.9,
-                                        autoPlay: true,
-                                        autoPlayInterval: const Duration(seconds: 4),
-                                        autoPlayAnimationDuration:
-                                        const Duration(milliseconds: 300),
-                                        autoPlayCurve:Curves.bounceInOut ,
-                                        enlargeCenterPage: false,
-                                        onPageChanged: (index, reason) {}),
+                      return FutureBuilder(
+                          future: value.getHomeBanner(
+                              value.lat!, value.long!, m['token'] ?? '', idCat),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData &&
+                                value.homeBanner.isNotEmpty) {
+                              final list = snapshot.data as List;
+                              return CarouselSlider(
+                                items: list.map((i) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 5.0),
+                                          decoration: const BoxDecoration(
+                                              color: Colors.amber),
+                                          child: GestureDetector(
+                                              child: Image.network(i['image']),
+                                              onTap: () {
+                                                if (i['type'] == 'shop') {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              Shop(
+                                                                id: '${i['shop']}',
+                                                                token:
+                                                                    m['token'] ??
+                                                                        '',
+                                                              )));
+                                                } else {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ServiceInfoInShop(
+                                                                shopId:
+                                                                    '${i['shop']}',
+                                                                token:
+                                                                    m['token'] ??
+                                                                        '',
+                                                                serviceId:
+                                                                    '${i['service']}',
+                                                              )));
+                                                }
+                                              }));
+                                    },
                                   );
-                                } else {
-                                  return const CircularProgressIndicator();
-                                }
-                              });
-                        }),
+                                }).toList(),
+                                options: CarouselOptions(
+                                    aspectRatio: 3,
+                                    viewportFraction: 0.9,
+                                    autoPlay: true,
+                                    autoPlayInterval:
+                                        const Duration(seconds: 4),
+                                    autoPlayAnimationDuration:
+                                        const Duration(milliseconds: 300),
+                                    autoPlayCurve: Curves.bounceInOut,
+                                    enlargeCenterPage: false,
+                                    onPageChanged: (index, reason) {}),
+                              );
+                            } else {
+                              return Lottie.network(
+                                  'https://assets1.lottiefiles.com/datafiles/dCoEZJcl8sFV0r4/data.json');
+                            }
+                          });
+                    }),
 
                     const SizedBox(height: 10),
                     const DiscountBanner(),
@@ -229,25 +237,25 @@ class _MenuState extends State<Menu>  {
                     Consumer<ProviderController>(
                       builder: (BuildContext context, value, Widget? child) {
                         return FutureBuilder(
-                            future: value.getPCategory(m['token']??''),
+                            future: value.getPCategory(m['token'] ?? ''),
                             builder: (context, snapshot) {
                               if (snapshot.hasData &&
                                   value.pModule.isNotEmpty) {
                                 final list = snapshot.data as List;
                                 return SingleChildScrollView(
                                   padding:
-                                  const EdgeInsets.fromLTRB(15, 5, 7, 10),
+                                      const EdgeInsets.fromLTRB(15, 5, 7, 10),
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
                                     children: List.generate(
                                       list.length,
-                                          (index) => Padding(
-                                        padding:
-                                        const EdgeInsets.only(right: 8,left: 8),
+                                      (index) => Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 8, left: 8),
                                         child: CategoryItem(
                                           data: list[index],
                                           isSelected:
-                                          index == selectedCategoryIndex,
+                                              index == selectedCategoryIndex,
                                           onTap: () {
                                             // value.getData(list[index]['id']);
                                             setState(() {
@@ -261,173 +269,175 @@ class _MenuState extends State<Menu>  {
                                   ),
                                 );
                               } else {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
+                                return Lottie.network(
+                                    'https://assets5.lottiefiles.com/packages/lf20_iPPFod.json');
                               }
                             });
                       },
                     ),
 
-
-
                     Consumer<ProviderController>(
                         builder: (context, value, child) {
-                          return FutureBuilder(
-                              future: value.getPopServices(
-                                  '0', value.lat!, value.long!, m['token'] ?? ''),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData &&
-                                    value.popServices.isNotEmpty) {
-                                  final map = snapshot.data as List;
-                                  return Column(
-                                    children: [
-                                      Card(
-                                        elevation: 0,
-                                        color: Colors.white,
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(30))),
-                                        child: Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              16, 16, 16, 6),
-                                          child: Row(
-                                            mainAxisAlignment:
+                      return FutureBuilder(
+                          future: value.getPopServices(
+                              '0', value.lat!, value.long!, m['token'] ?? ''),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData &&
+                                value.popServices.isNotEmpty) {
+                              final map = snapshot.data as List;
+                              return Column(
+                                children: [
+                                  Card(
+                                    elevation: 0,
+                                    color: Theme.of(context)
+                                        .backgroundColor,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(30))),
+                                    child: Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 16, 16, 6),
+                                      child: Row(
+                                        mainAxisAlignment:
                                             MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Icons.local_laundry_service,
-                                                color: Colors.blueGrey,
-                                                size: 30,
-                                              ),
-                                              const SizedBox(
-                                                width: 8,
-                                              ),
-                                              Text('Popular Services',
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 23,
-                                                      fontWeight: FontWeight.w700,
-                                                      color: Colors.grey.shade600)),
-                                              Expanded(child: Container()),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              AllServices(
-                                                                token: m['token'] ??
-                                                                    '',
-                                                              )));
-                                                },
-                                                child: const Text('view all',
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.w800,
-                                                        color: PRIMARY_COLOR),
-                                                    textAlign: TextAlign.end),
-                                              )
-                                            ],
+                                        children: [
+                                          const Icon(
+                                            Icons.local_laundry_service,
+                                            color: Colors.blueGrey,
+                                            size: 30,
                                           ),
-                                        ),
-                                      ),
-                                      GridView.count(
-                                        padding: const EdgeInsets.all(12),
-                                        primary: false,
-                                        childAspectRatio: 4 / 1.6,
-                                        shrinkWrap: true,
-                                        crossAxisSpacing: 2,
-                                        mainAxisSpacing: 2,
-                                        crossAxisCount: 2,
-                                        children: List.generate(4, (index) {
-                                          return GestureDetector(
+                                          const SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text('Popular Services',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 23,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.grey.shade600)),
+                                          Expanded(child: Container()),
+                                          GestureDetector(
                                             onTap: () {
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ServicesDetials(
-                                                              id: map[index]['id'],
-                                                              token: m['token'] ??
-                                                                  '')));
+                                                          AllServices(
+                                                            token: m['token'] ??
+                                                                '',
+                                                          )));
                                             },
-                                            child: Card(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
+                                            child: const Text('view all',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w800,
+                                                    color: PRIMARY_COLOR),
+                                                textAlign: TextAlign.end),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  GridView.count(
+                                    padding: const EdgeInsets.all(12),
+                                    primary: false,
+                                    childAspectRatio: 4 / 1.6,
+                                    shrinkWrap: true,
+                                    crossAxisSpacing: 2,
+                                    mainAxisSpacing: 2,
+                                    crossAxisCount: 2,
+                                    children: List.generate(4, (index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ServicesDetials(
+                                                          id: map[index]['id'],
+                                                          token: m['token'] ??
+                                                              '')));
+                                        },
+                                        child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
                                                   BorderRadius.circular(10),
-                                                ),
-                                                elevation: 2,
-                                                color: Colors.white,
-                                                child: Row(
-                                                  children: [
-                                                    ClipRRect(
-                                                        borderRadius:
+                                            ),
+                                            elevation: 2,
+                                            color:Theme.of(context)
+                                                .backgroundColor,
+                                            child: Row(
+                                              children: [
+                                                ClipRRect(
+                                                    borderRadius:
                                                         const BorderRadius.only(
                                                             topLeft:
-                                                            Radius.circular(
-                                                                10),
+                                                                Radius.circular(
+                                                                    10),
                                                             bottomLeft:
-                                                            Radius.circular(
-                                                                10)),
-                                                        child: buildCacheNetworkImage(
-                                                            width: (MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                                2) *
+                                                                Radius.circular(
+                                                                    10)),
+                                                    child: buildCacheNetworkImage(
+                                                        width: (MediaQuery.of(context)
+                                                                        .size
+                                                                        .width /
+                                                                    2) *
                                                                 (1.6 / 4) -
-                                                                12 -
-                                                                1,
-                                                            height: (MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                                2) *
+                                                            12 -
+                                                            1,
+                                                        height: (MediaQuery.of(context)
+                                                                        .size
+                                                                        .width /
+                                                                    2) *
                                                                 (1.6 / 4) -
-                                                                12 -
-                                                                1,
-                                                            url: map[index]
+                                                            12 -
+                                                            1,
+                                                        url: map[index]
                                                             ['image'])),
-                                                    Expanded(
-                                                      child: Container(
-                                                        margin:
+                                                Expanded(
+                                                  child: Container(
+                                                    margin:
                                                         const EdgeInsets.all(
                                                             10),
-                                                        child: Column(
-                                                          mainAxisAlignment:
+                                                    child: Column(
+                                                      mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                          crossAxisAlignment:
+                                                      crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
-                                                          children: [
-                                                            Text(
-                                                                '${map[index]['name']}',
-                                                                style: const TextStyle(
-                                                                    fontSize: 11,
-                                                                    fontWeight:
+                                                      children: [
+                                                        Text(
+                                                            '${map[index]['name']}',
+                                                            style: const TextStyle(
+                                                                fontSize: 11,
+                                                                fontWeight:
                                                                     FontWeight
                                                                         .bold)),
-                                                            const SizedBox(
-                                                                height: 4),
-                                                            Text(
-                                                                '${map[index]['rate']} Rate',
-                                                                style: const TextStyle(
-                                                                    fontSize: 9,
-                                                                    color: Color(
-                                                                        0xFF37474f)))
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                )),
-                                          );
-                                        }),
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return const CircularProgressIndicator();
-                                }
-                              });
-                        }),
+                                                        const SizedBox(
+                                                            height: 4),
+                                                        Text(
+                                                            '${map[index]['rate']} Rate',
+                                                            style: const TextStyle(
+                                                                fontSize: 9,
+                                                                color: Color(
+                                                                    0xFF37474f)))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            )),
+                                      );
+                                    }),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return Container(
+                                child: Lottie.network(
+                                    'https://assets2.lottiefiles.com/packages/lf20_ESYRqy.json'),
+                              );
+                            }
+                          });
+                    }),
                     // Stack(
                     //   alignment: Alignment.centerLeft,
                     //   children: [
@@ -547,99 +557,100 @@ class _MenuState extends State<Menu>  {
 
                     Consumer<ProviderController>(
                         builder: (context, value, child) {
-                          return FutureBuilder(
-                              future: value.getShops(idCat, value.lat!, value.long!,
-                                  m['token'] ?? '', search, '$numOfPage'),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData && value.shops.isNotEmpty) {
-                                  final map = snapshot.data as List;
-                                  return Column(
-                                    children: [
-                                      Card(
-                                        elevation: 0,
-                                        color: Colors.white,
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(30))),
-                                        child: Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              16, 16, 16, 16),
-                                          child: Row(
-                                            mainAxisAlignment:
+                      return FutureBuilder(
+                          future: value.getShops(idCat, value.lat!, value.long!,
+                              m['token'] ?? '', search, '$numOfPage'),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && value.shops.isNotEmpty) {
+                              final map = snapshot.data as List;
+                              return Column(
+                                children: [
+                                  Card(
+                                    elevation: 0,
+                                    color: Theme.of(context)
+                                        .backgroundColor,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(30))),
+                                    child: Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 16, 16, 16),
+                                      child: Row(
+                                        mainAxisAlignment:
                                             MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Icons.shop,
-                                                color: Colors.blueGrey,
-                                                size: 30,
-                                              ),
-                                              const SizedBox(
-                                                width: 8,
-                                              ),
-                                              Text('Shops',
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 23,
-                                                      fontWeight: FontWeight.w700,
-                                                      color: Colors.grey.shade600)),
-                                              Expanded(child: Container()),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              AllShops(
-                                                                  token:
+                                        children: [
+                                          const Icon(
+                                            Icons.shop,
+                                            color: Colors.blueGrey,
+                                            size: 30,
+                                          ),
+                                          const SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text('Shops',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 23,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.grey.shade600)),
+                                          Expanded(child: Container()),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AllShops(
+                                                              token:
                                                                   m['token'] ??
                                                                       '')));
-                                                },
-                                                child: const Text('view all',
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.w800,
-                                                        color: PRIMARY_COLOR),
-                                                    textAlign: TextAlign.end),
-                                              )
-                                            ],
-                                          ),
-                                        ),
+                                            },
+                                            child: const Text('view all',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w800,
+                                                    color: PRIMARY_COLOR),
+                                                textAlign: TextAlign.end),
+                                          )
+                                        ],
                                       ),
-                                      SingleChildScrollView(
-                                        padding: const EdgeInsets.only(left: 15),
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                            children: List.generate(
-                                              map.length,
-                                                  (index) => Container(
-                                                margin:
-                                                const EdgeInsets.only(right: 15),
-                                                child: PopularItem(
-                                                  data: map[index],
-                                                  onFavoriteTap: () {
-                                                    value.addFav(
-                                                        token: m['token'] ?? '',
-                                                        id: map[index]['id']);
-                                                    setState(() {});
-                                                  },
-                                                  onTap: () {
-                                                    Navigator.of(context)
-                                                        .push(MaterialPageRoute(
-                                                        builder: (context) => Shop(
+                                    ),
+                                  ),
+                                  SingleChildScrollView(
+                                    padding: const EdgeInsets.only(left: 15),
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                        children: List.generate(
+                                      map.length,
+                                      (index) => Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 15),
+                                        child: PopularItem(
+                                          data: map[index],
+                                          onFavoriteTap: () {
+                                            value.addFav(
+                                                token: m['token'] ?? '',
+                                                id: map[index]['id']);
+                                            setState(() {});
+                                          },
+                                          onTap: () {
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                                    builder: (context) => Shop(
                                                           id: map[index]['id'],
                                                           token:
-                                                          m['token'] ?? '',
+                                                              m['token'] ?? '',
                                                         )));
-                                                  },
-                                                ),
-                                              ),
-                                            )),
+                                          },
+                                        ),
                                       ),
-                                    ],
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              });
-                        }),
+                                    )),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return Container();
+                            }
+                          });
+                    }),
 
                     const SizedBox(
                       height: 10,
@@ -649,7 +660,7 @@ class _MenuState extends State<Menu>  {
                       color: Colors.transparent,
                       shape: const RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.only(topLeft: Radius.circular(30))),
+                              BorderRadius.only(topLeft: Radius.circular(30))),
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                         child: Row(
@@ -674,99 +685,100 @@ class _MenuState extends State<Menu>  {
                     ),
                     Consumer<ProviderController>(
                         builder: (context, value, child) {
-                          return FutureBuilder(
-                              future: value.getShops(idCat, value.lat!, value.long!,
-                                  m['token'] ?? '', search, '1'),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData && value.shops.isNotEmpty) {
-                                  final map = snapshot.data as List;
-                                  return Column(
-                                    children: [
-                                      Card(
-                                        elevation: 0,
-                                        color: Colors.white,
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(30))),
-                                        child: Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              16, 16, 16, 16),
-                                          child: Row(
-                                            mainAxisAlignment:
+                      return FutureBuilder(
+                          future: value.getShops(idCat, value.lat!, value.long!,
+                              m['token'] ?? '', search, '1'),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && value.shops.isNotEmpty) {
+                              final map = snapshot.data as List;
+                              return Column(
+                                children: [
+                                  Card(
+                                    elevation: 0,
+                                    color: Theme.of(context)
+                                        .backgroundColor,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(30))),
+                                    child: Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 16, 16, 16),
+                                      child: Row(
+                                        mainAxisAlignment:
                                             MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Icons.near_me_rounded,
-                                                color: Colors.blueGrey,
-                                                size: 30,
-                                              ),
-                                              const SizedBox(
-                                                width: 8,
-                                              ),
-                                              Text('Shop Around You ',
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 23,
-                                                      fontWeight: FontWeight.w700,
-                                                      color: Colors.grey.shade600)),
-                                              Expanded(child: Container()),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              AllShops(
-                                                                token: m['token'] ??
-                                                                    '',
-                                                              )));
-                                                },
-                                                child: const Text('view all',
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.w800,
-                                                        color: PRIMARY_COLOR),
-                                                    textAlign: TextAlign.end),
-                                              )
-                                            ],
+                                        children: [
+                                          const Icon(
+                                            Icons.near_me_rounded,
+                                            color: Colors.blueGrey,
+                                            size: 30,
                                           ),
-                                        ),
+                                          const SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text('Shop Around You ',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 23,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.grey.shade600)),
+                                          Expanded(child: Container()),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AllShops(
+                                                            token: m['token'] ??
+                                                                '',
+                                                          )));
+                                            },
+                                            child: const Text('view all',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w800,
+                                                    color: PRIMARY_COLOR),
+                                                textAlign: TextAlign.end),
+                                          )
+                                        ],
                                       ),
-                                      SingleChildScrollView(
-                                        padding: const EdgeInsets.only(left: 15),
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                            children: List.generate(
-                                              map.length,
-                                                  (index) => Container(
-                                                margin:
-                                                const EdgeInsets.only(right: 15),
-                                                child: PopularItem(
-                                                  data: map[index],
-                                                  onFavoriteTap: () {
-                                                    value.addFav(
-                                                        token: m['token'] ?? '',
-                                                        id: map[index]['id']);
-                                                    setState(() {});
-                                                  },
-                                                  onTap: () {
-                                                    Navigator.of(context)
-                                                        .push(MaterialPageRoute(
-                                                        builder: (context) => Shop(
+                                    ),
+                                  ),
+                                  SingleChildScrollView(
+                                    padding: const EdgeInsets.only(left: 15),
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                        children: List.generate(
+                                      map.length,
+                                      (index) => Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 15),
+                                        child: PopularItem(
+                                          data: map[index],
+                                          onFavoriteTap: () {
+                                            value.addFav(
+                                                token: m['token'] ?? '',
+                                                id: map[index]['id']);
+                                            setState(() {});
+                                          },
+                                          onTap: () {
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                                    builder: (context) => Shop(
                                                           id: map[index]['id'],
                                                           token:
-                                                          m['token'] ?? '',
+                                                              m['token'] ?? '',
                                                         )));
-                                                  },
-                                                ),
-                                              ),
-                                            )),
+                                          },
+                                        ),
                                       ),
-                                    ],
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              });
-                        }),
+                                    )),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return Container();
+                            }
+                          });
+                    }),
 
                     Consumer<ProviderController>(
                       builder: (BuildContext context, value, Widget? child) {
@@ -781,7 +793,8 @@ class _MenuState extends State<Menu>  {
                                   children: [
                                     Card(
                                       elevation: 0,
-                                      color: Colors.white,
+                                      color:Theme.of(context)
+                                          .backgroundColor,
                                       shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(30))),
@@ -790,7 +803,7 @@ class _MenuState extends State<Menu>  {
                                             16, 16, 16, 16),
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                              MainAxisAlignment.start,
                                           children: [
                                             const Icon(
                                               Icons.shop_2,
@@ -805,7 +818,7 @@ class _MenuState extends State<Menu>  {
                                                     fontSize: 23,
                                                     fontWeight: FontWeight.w700,
                                                     color:
-                                                    Colors.grey.shade600)),
+                                                        Colors.grey.shade600)),
                                             Expanded(child: Container()),
                                             GestureDetector(
                                               onTap: () {
@@ -814,15 +827,15 @@ class _MenuState extends State<Menu>  {
                                                         builder: (context) =>
                                                             AllShops(
                                                               token:
-                                                              m['token'] ??
-                                                                  '',
+                                                                  m['token'] ??
+                                                                      '',
                                                             )));
                                               },
                                               child: const Text('view all',
                                                   style: TextStyle(
                                                       fontSize: 15,
                                                       fontWeight:
-                                                      FontWeight.w800,
+                                                          FontWeight.w800,
                                                       color: PRIMARY_COLOR),
                                                   textAlign: TextAlign.end),
                                             )
@@ -839,10 +852,10 @@ class _MenuState extends State<Menu>  {
                                         ),
                                         items: List.generate(
                                             list.length,
-                                                (index) => PropertyItem(
-                                              data: list[index],
-                                              token: m['token'] ?? '',
-                                            ))),
+                                            (index) => PropertyItem(
+                                                  data: list[index],
+                                                  token: m['token'] ?? '',
+                                                ))),
                                   ],
                                 );
                               } else {
@@ -1037,94 +1050,95 @@ class _MenuState extends State<Menu>  {
 
                     Consumer<ProviderController>(
                         builder: (context, value, child) {
-                          return FutureBuilder(
-                              future: value.getShops(idCat, value.lat!, value.long!,
-                                  m['token'] ?? '', search, '1'),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData && value.shops.isNotEmpty) {
-                                  final list = snapshot.data as List;
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Card(
-                                        elevation: 0,
-                                        color: Colors.white,
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(30))),
-                                        child: Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              16, 16, 16, 16),
-                                          child: Row(
-                                            mainAxisAlignment:
+                      return FutureBuilder(
+                          future: value.getShops(idCat, value.lat!, value.long!,
+                              m['token'] ?? '', search, '1'),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && value.shops.isNotEmpty) {
+                              final list = snapshot.data as List;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Card(
+                                    elevation: 0,
+                                    color: Theme.of(context)
+                                        .backgroundColor,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(30))),
+                                    child: Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 16, 16, 16),
+                                      child: Row(
+                                        mainAxisAlignment:
                                             MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Icons.shop,
-                                                color: Colors.blueGrey,
-                                                size: 30,
-                                              ),
-                                              const SizedBox(
-                                                width: 8,
-                                              ),
-                                              Text('Shops',
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 23,
-                                                      fontWeight: FontWeight.w700,
-                                                      color: Colors.grey.shade600)),
-                                              Expanded(child: Container()),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              AllShops(
-                                                                token: m['token'] ??
-                                                                    '',
-                                                              )));
-                                                },
-                                                child: const Text('view all',
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.w800,
-                                                        color: PRIMARY_COLOR),
-                                                    textAlign: TextAlign.end),
-                                              )
-                                            ],
+                                        children: [
+                                          const Icon(
+                                            Icons.shop,
+                                            color: Colors.blueGrey,
+                                            size: 30,
                                           ),
-                                        ),
+                                          const SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text('Shops',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 23,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.grey.shade600)),
+                                          Expanded(child: Container()),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AllShops(
+                                                            token: m['token'] ??
+                                                                '',
+                                                          )));
+                                            },
+                                            child: const Text('view all',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w800,
+                                                    color: PRIMARY_COLOR),
+                                                textAlign: TextAlign.end),
+                                          )
+                                        ],
                                       ),
-                                      SingleChildScrollView(
-                                        padding:
+                                    ),
+                                  ),
+                                  SingleChildScrollView(
+                                    padding:
                                         const EdgeInsets.fromLTRB(15, 0, 0, 15),
-                                        scrollDirection: Axis.horizontal,
-                                        child: Column(
-                                          children: List.generate(
-                                            list.length,
-                                                (index) => Container(
-                                              margin: const EdgeInsets.only(
-                                                  right: 15, bottom: 15, left: 3),
-                                              child: RecommendItem(
-                                                data: list[index],
-                                                onTap: () {},
-                                                onFavoriteTap: () {
-                                                  value.addFav(
-                                                      token: m['token'] ?? '',
-                                                      id: list[index]['id']);
-                                                  setState(() {});
-                                                },
-                                              ),
-                                            ),
+                                    scrollDirection: Axis.horizontal,
+                                    child: Column(
+                                      children: List.generate(
+                                        list.length,
+                                        (index) => Container(
+                                          margin: const EdgeInsets.only(
+                                              right: 15, bottom: 15, left: 3),
+                                          child: RecommendItem(
+                                            data: list[index],
+                                            onTap: () {},
+                                            onFavoriteTap: () {
+                                              value.addFav(
+                                                  token: m['token'] ?? '',
+                                                  id: list[index]['id']);
+                                              setState(() {});
+                                            },
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              });
-                        }),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return Container();
+                            }
+                          });
+                    }),
                   ],
                 ),
               );
@@ -1164,18 +1178,19 @@ class _MenuState extends State<Menu>  {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RichText(
-            text: const TextSpan(
+            text:  TextSpan(
               children: <TextSpan>[
                 TextSpan(
                   text: 'Stay at home, \nmake your own ',
                   style: TextStyle(
                     height: 1.3,
-                    color: textColor,
+                    color: Theme.of(context)
+                        .primaryColor,
                     fontWeight: FontWeight.w600,
                     fontSize: 25,
                   ),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: 'food',
                   style: TextStyle(
                     color: primary,

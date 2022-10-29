@@ -60,8 +60,9 @@ class _ServicesTapState extends State<ServicesTap> {
                                     list[index]["name"]??'',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: textColor,
+                                    style:  TextStyle(
+                                      color: Theme.of(context)
+                                          .primaryColor,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -77,7 +78,8 @@ class _ServicesTapState extends State<ServicesTap> {
                              const SizedBox(height: 10,),
                              Text(
                               list[index]['desc']??'',
-                              style: const TextStyle(fontSize: 17,fontWeight: FontWeight.w700, color: labelColor),
+                              style:  TextStyle(fontSize: 17,fontWeight: FontWeight.w700, color: Theme.of(context)
+                                  .primaryColor),
                             ),
                             const SizedBox(
                               height: 15,
@@ -102,7 +104,7 @@ class _ServicesTapState extends State<ServicesTap> {
                                         width: 3,
                                       ),
                                       Text(
-                                        "${list[index]['rate']}",
+                                        "${list[index]['rate']['rate']}",
                                         style: const TextStyle(fontSize: 14),
                                       )
                                     ],

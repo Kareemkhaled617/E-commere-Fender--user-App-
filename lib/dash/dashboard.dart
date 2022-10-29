@@ -171,16 +171,13 @@ class _homeAdminState extends State<homeAdmin> {
         builder: (context,snapshot){
           if(snapshot.hasData){
             final list = snapshot.data as List;
-       list.forEach((element) {
-         element['data'].forEach((val){
-           series.add(charts.Series(
-               id: val['name'],
-               domainFn: (Sales sales, _) => sales.year,
-               measureFn: (Sales sales, _) => sales.sale,
-               data: _smartphoneData
-           ));
-         });
-       });
+            series.add(charts.Series(
+                id: 'count',
+                domainFn: (Sales sales, _) => sales.year,
+                measureFn: (Sales sales, _) => sales.sale,
+                data: p.smartphoneData
+            ));
+
             return  SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
               child: Column(

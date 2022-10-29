@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_provider/provider/provider.dart';
 import 'package:test_provider/ui/product_review.dart';
@@ -15,11 +16,11 @@ import 'package:test_provider/ui/sli.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-import '../component/banner_slider_model.dart';
-import '../component/cache_image_network.dart';
-import '../config/constant.dart';
-import '../model/reusable_widget.dart';
-import 'menu/design_course_app_theme.dart';
+import '../../component/banner_slider_model.dart';
+import '../../component/cache_image_network.dart';
+import '../../config/constant.dart';
+import '../../model/reusable_widget.dart';
+import '../menu/design_course_app_theme.dart';
 
 class ShopInfo extends StatefulWidget {
   ShopInfo({Key? key, required this.id, required this.token})
@@ -76,20 +77,26 @@ class _ShopInfoState extends State<ShopInfo>
 
   Future<void> setData() async {
     animationController?.forward();
-    await Future<dynamic>.delayed(const Duration(seconds: 3));
+    await Future<dynamic>.delayed(const Duration(seconds: 2));
     setState(() {
       opacity1 = 1.0;
     });
-    await Future<dynamic>.delayed(const Duration(seconds: 3));
+    await Future<dynamic>.delayed(const Duration(seconds: 2));
     setState(() {
       opacity2 = 1.0;
     });
-    await Future<dynamic>.delayed(const Duration(seconds: 3));
+    await Future<dynamic>.delayed(const Duration(seconds: 2));
     setState(() {
       opacity3 = 1.0;
     });
   }
 
+  @override
+  void dispose() {
+    animationController?.dispose();
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -642,7 +649,7 @@ class _ShopInfoState extends State<ShopInfo>
                                           )),
                                       AnimatedOpacity(
                                         duration:
-                                            const Duration(milliseconds: 500),
+                                            const Duration(milliseconds: 100),
                                         opacity: opacity3,
                                         child: Padding(
                                           padding: const EdgeInsets.only(
@@ -730,14 +737,22 @@ class _ShopInfoState extends State<ShopInfo>
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(50.0)),
                                   elevation: 10.0,
-                                  child: const SizedBox(
+                                  child:  SizedBox(
                                     width: 60,
                                     height: 60,
                                     child: Center(
-                                      child: Icon(
-                                        Icons.favorite,
-                                        color: DesignCourseAppTheme.nearlyWhite,
-                                        size: 30,
+                                      child: IconButton(
+                                        icon:map['is_fav']?const Icon( Icons.favorite,
+                                          color: Colors.red,
+                                          size: 30,):const Icon( Icons.favorite,
+                                          color: DesignCourseAppTheme.nearlyWhite,
+                                          size: 30,),
+                                        onPressed: () {
+                                          value.addFav(
+                                          token: widget.token,
+                                          id: map['id']);
+                                      setState(() {}); },
+
                                       ),
                                     ),
                                   ),
@@ -818,7 +833,8 @@ class _ShopInfoState extends State<ShopInfo>
                 ),
               );
             } else {
-              return const CircularProgressIndicator();
+              return  Lottie.network(
+                  'https://assets6.lottiefiles.com/packages/lf20_rvkzuvrm.json');
             }
           });
     });

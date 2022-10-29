@@ -1,5 +1,6 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_provider/provider/login_controller.dart';
 import 'package:test_provider/provider/provider_home.dart';
@@ -13,6 +14,8 @@ import '../search/settings_page.dart';
 
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -23,8 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(builder: (context, value, child) {
       return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           elevation: 0,
           centerTitle: true,
           title:  Consumer<LoginController>(
@@ -39,9 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <TextSpan>[
                         TextSpan(
                           text: DateTime.now().hour <= 12?'Good Morning, \n ${'${map['f_name']} ${map['l_name']}'} ':'Good Evening, \n ${'${map['f_name']} ${map['l_name']}'}  ',
-                          style: const TextStyle(
+                          style:  TextStyle(
                             height: 1.3,
-                            color: textColor,
+                            color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.w600,
                             fontSize: 18,
                           ),
@@ -63,9 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <TextSpan>[
                         TextSpan(
                           text: DateTime.now().hour <= 12?'Good Morning, \n  Guest':'Good Evening, \n Guest ',
-                          style: const TextStyle(
+                          style:  TextStyle(
                             height: 1.3,
-                            color: textColor,
+                            color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.w600,
                             fontSize: 18,
                           ),
@@ -107,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: value.pages,
         ),
         bottomNavigationBar: BottomNavyBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           showElevation: false,
           selectedIndex: value.currentIndex,
           items: [
@@ -144,22 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Dialog(
                   // The background color
                   backgroundColor: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        // The loading indicator
-                        CircularProgressIndicator(),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        // Some text
-                        Text('Loading...')
-                      ],
-                    ),
-                  ),
+                  child: Lottie.network('https://assets10.lottiefiles.com/packages/lf20_bKoLdP.json'),
                 );
               });
           context
@@ -174,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 .long!,
           )
               .whenComplete(() {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) =>
                     MapPage(
                       long: context

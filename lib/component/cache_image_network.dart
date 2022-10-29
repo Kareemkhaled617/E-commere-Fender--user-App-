@@ -7,7 +7,7 @@ CachedNetworkImage buildCacheNetworkImage({double? width, double? height, url, p
     return CachedNetworkImage(
       placeholder: (context, url) {
         return Container(
-          color: plColor==null?Colors.grey[200]:plColor,
+          color: plColor ?? Colors.grey[200],
         );
       },
       errorWidget: (context, url, error) {

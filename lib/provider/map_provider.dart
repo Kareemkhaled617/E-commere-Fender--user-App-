@@ -26,6 +26,7 @@ class ProviderState with ChangeNotifier {
   String address = '';
   double? lat;
   double? long;
+  bool end=false;
 
   void changeState() {
     search = !search;
@@ -137,12 +138,15 @@ class ProviderState with ChangeNotifier {
     print(lastPsition?.longitude);
     lat = lastPsition!.latitude;
     long = lastPsition.longitude;
-    // getMarkers('0', lat!, long!);
-    // getData('0');
-    // getSliderData('0', lat!, long!);
+    end=false;
+
     notifyListeners();
     return lastPsition;
-    // locationMessage="$position.latitude ,$position.longitude";
+
+  }
+  void endValue(bool val){
+    end = val;
+    notifyListeners();
   }
 
   void checkEnternet() async {

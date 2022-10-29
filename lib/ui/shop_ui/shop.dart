@@ -1,12 +1,12 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_provider/provider/provider.dart';
-import 'package:test_provider/ui/shop_ui/shop_details.dart';
 import 'package:test_provider/ui/shop_ui/shop_mark.dart';
 
 import '../../provider/provider_home.dart';
-import '../shop_info.dart';
+import 'shop_info.dart';
 import 'messages/message_screen.dart';
 
 class Shop extends StatefulWidget {
@@ -70,7 +70,8 @@ class _ShopState extends State<Shop> {
               ),
             );
           }else {
-            return const Scaffold(body: Center(child: CircularProgressIndicator(),),);
+            return  Lottie.network(
+                'https://assets6.lottiefiles.com/packages/lf20_k1zalk6s.json');
           }
 
     });

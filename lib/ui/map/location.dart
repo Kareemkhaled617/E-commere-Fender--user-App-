@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_provider/provider/provider.dart';
 import 'package:test_provider/ui/home/first.dart';
@@ -9,10 +10,31 @@ import '../../component/custom_button.dart';
 import '../home_services.dart';
 import 'map_location.dart';
 
-class screen_location extends StatelessWidget {
+class screen_location extends StatefulWidget {
    screen_location({Key? key,required this.get}) : super(key: key);
   bool get;
 
+  @override
+  State<screen_location> createState() => _screen_locationState();
+}
+
+class _screen_locationState extends State<screen_location> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      lowerBound: 0.5,
+      duration: const Duration(seconds: 3),
+    )..repeat();
+  }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     print('Location');
@@ -23,7 +45,7 @@ class screen_location extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const MyHomePage()));
+             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const HomePage()));
           },
           icon: const Icon(Icons.arrow_back_ios_new_outlined),
           color: Colors.black,
@@ -35,16 +57,8 @@ class screen_location extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              width: double.infinity,
-              height: 350,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                    scale: 0.4,
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      'https://www.snapsendsolve.com/wp-content/uploads/2021/08/Final-web-01-1.png',
-                    )),
-              ),
+              child: Lottie.network(
+              'https://assets6.lottiefiles.com/packages/lf20_is82b4.json'),
             ),
             Column(
               children: [
@@ -138,7 +152,7 @@ class screen_location extends StatelessWidget {
                               ),
                             );
                           });
-                    if(get){
+                    if(widget.get){
                       context.read<ProviderController>().getCurrentLocation().whenComplete(() {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const MapLocation()));
                       });

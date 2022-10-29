@@ -1,4 +1,3 @@
-
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,8 @@ import 'package:test_provider/main.dart';
 import 'package:test_provider/provider/login_controller.dart';
 import 'package:test_provider/ui/search/settings_page.dart';
 
+import '../../provider/theme_changer.dart';
+import 'profile_info.dart';
 import '../device_info.dart';
 import '../login1/login_ui.dart';
 import 'lock_screen_page.dart';
@@ -30,14 +31,15 @@ class _SettingsState extends State<Settings> {
                 if (snapshot.hasData && value.userData.isNotEmpty) {
                   final map = snapshot.data as Map;
                   return Scaffold(
+                    backgroundColor:Theme.of(context).backgroundColor,
                     body: Padding(
                       padding: const EdgeInsets.all(10),
                       child: ListView(
                         children: [
                           BigUserCard(
                             cardColor: Colors.blueGrey,
-                            userName: '${map['f_name']} ${map['l_name']}',
-                            userProfilePic: NetworkImage(map['image']),
+                            userName:'${map['f_name']} ${map['l_name']}',
+                            userProfilePic:NetworkImage(map['image']),
                             cardActionWidget: SettingsItem(
                               icons: Icons.edit,
                               iconStyle: IconStyle(
@@ -53,11 +55,19 @@ class _SettingsState extends State<Settings> {
                           SettingsGroup(
                             items: [
                               SettingsItem(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => Profile()));
+                                },
                                 icons: CupertinoIcons.pencil_outline,
-                                iconStyle: IconStyle(),
+                                iconStyle: IconStyle(
+                                ),
                                 title: 'Appearance',
-                                subtitle: "Make Ziar'App yours",
+                                titleStyle: TextStyle(
+                                    color:
+                                    Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.w800),
+                                subtitle: '${map['f_name']} ${map['l_name']}',
                               ),
                               SettingsItem(
                                 onTap: () {},
@@ -70,8 +80,16 @@ class _SettingsState extends State<Settings> {
                                 title: 'Dark mode',
                                 subtitle: "Automatic",
                                 trailing: Switch.adaptive(
-                                  value: false,
-                                  onChanged: (value) {},
+                                  value: Provider.of<ThemeChanger>(context)
+                                      .darkTheme,
+                                  onChanged: (value) {
+                                    Provider.of<ThemeChanger>(context,
+                                        listen: false)
+                                        .setTheme(value);
+                                    Provider.of<ThemeChanger>(context,
+                                        listen: false).saveTheme(value);
+
+                                  },
                                 ),
                               ),
                               SettingsItem(
@@ -108,7 +126,6 @@ class _SettingsState extends State<Settings> {
                               ),
                             ],
                           ),
-                          // You can add a settings title
                           SettingsGroup(
                             settingsGroupTitle: "Account",
                             items: [
@@ -153,6 +170,7 @@ class _SettingsState extends State<Settings> {
                   );
                 } else {
                   return Scaffold(
+                    backgroundColor:Theme.of(context).backgroundColor,
                     body: Padding(
                       padding: const EdgeInsets.all(10),
                       child: ListView(

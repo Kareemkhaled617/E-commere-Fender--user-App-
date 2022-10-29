@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_provider/provider/provider.dart';
 import 'package:test_provider/ui/service_info.dart';
@@ -137,7 +138,8 @@ class _AllServicesState extends State<AllServices> {
               },
             );
           }else{
-          return const Center(child: CircularProgressIndicator(),);
+            return  Lottie.network(
+                'https://assets5.lottiefiles.com/packages/lf20_eMqO0m.json');
           }
         },
       ),);

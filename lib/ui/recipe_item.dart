@@ -51,8 +51,9 @@ class RecipeItem extends StatelessWidget {
                           data["name"],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: textColor,
+                          style:  TextStyle(
+                            color: Theme.of(context)
+                                .primaryColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -90,8 +91,9 @@ class RecipeItem extends StatelessWidget {
                               data["name"],
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: textColor,
+                              style:  TextStyle(
+                                color: Theme.of(context)
+                                    .primaryColor,
                                 fontSize: 14,
                               ),
                             ),

@@ -10,6 +10,7 @@ import 'package:test_provider/provider/login_controller.dart';
 import 'package:test_provider/provider/map_provider.dart';
 import 'package:test_provider/provider/provider.dart';
 import 'package:test_provider/provider/provider_home.dart';
+import 'package:test_provider/provider/theme_changer.dart';
 import 'package:test_provider/ui/home_services.dart';
 import 'package:test_provider/ui/loading_page.dart';
 
@@ -86,36 +87,54 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
           create: (BuildContext context) => ProviderState()..getData('0'),
         ),
+        ChangeNotifierProvider(
+          create: (BuildContext context) => ThemeChanger()..getTheme()
+        ),
       ],
-      child: MaterialApp(
-        title: 'ECommerce',
-        debugShowCheckedModeBanner: false,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale:_locale,
-        themeMode: ThemeMode.system,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: Consumer<ProviderController>(
-          builder: (context, value, child) {
-            return FutureBuilder(
-              future: value.checkEnternet(),
-              builder: (context, snapshot) {
-                if (snapshot.data == true) {
-                   value.changeLang(_locale!);
-                  return const SplashScreen();
-                } else {
-                  return const Scaffold(
-                    body: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            title: 'ECommerce',
+            debugShowCheckedModeBanner: false,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale:_locale,
+            themeMode: Provider.of<ThemeChanger>(context).themeMode,
+            theme:  ThemeData(
+              brightness: Brightness.light,
+                primaryColor: Colors.black,
+                backgroundColor: Colors.white,
+                splashColor:Colors.black
+
+                ),
+            darkTheme:ThemeData(
+              brightness: Brightness.dark,
+                primaryColor: Colors.white,
+              backgroundColor: Colors.black,
+                splashColor:Colors.grey
+
+            ) ,
+            home: Consumer<ProviderController>(
+              builder: (context, value, child) {
+                return FutureBuilder(
+                  future: value.checkEnternet(),
+                  builder: (context, snapshot) {
+                    if (snapshot.data == true) {
+                       value.changeLang(_locale!);
+                      return const SplashScreen();
+                    } else {
+                      return const Scaffold(
+                        body: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                  },
+                );
               },
-            );
-          },
-        ),
+            ),
+          );
+        }
       ),
     );
   }

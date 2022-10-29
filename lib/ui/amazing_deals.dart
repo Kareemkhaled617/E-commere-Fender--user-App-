@@ -40,6 +40,8 @@ class _MealsListViewState extends State<MealsListView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context)
+          .backgroundColor,
       body: SizedBox(
         height: 216,
         width: double.infinity,

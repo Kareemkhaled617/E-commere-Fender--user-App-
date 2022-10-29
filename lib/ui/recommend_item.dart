@@ -26,7 +26,8 @@ class RecommendItem extends StatelessWidget {
         width: MediaQuery.of(context).size.width-40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
+          color: Theme.of(context)
+              .backgroundColor,
           boxShadow: [
             BoxShadow(
               color: shadowColor.withOpacity(0.1),
@@ -54,8 +55,9 @@ class RecommendItem extends StatelessWidget {
                     data["name"]??'',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: textColor,
+                    style:  TextStyle(
+                      color: Theme.of(context)
+                          .primaryColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -106,7 +108,7 @@ class RecommendItem extends StatelessWidget {
                       //   ),
                       // ),
                       Container(
-                        padding: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(9),
                         decoration: BoxDecoration(
                           color: primary,
                           borderRadius: BorderRadius.circular(10),
@@ -116,18 +118,18 @@ class RecommendItem extends StatelessWidget {
                             const Icon(
                               Icons.star,
                               color: textColor,
-                              size: 14,
+                              size: 16,
                             ),
                             Text(
                               "${data['rate']['rate']??0}",
-                              style: const TextStyle(fontSize: 12),
+                              style: const TextStyle(fontSize: 15,fontWeight: FontWeight.w800),
                             )
                           ],
                         ),
                       ),
                       const Spacer(),
                       FavoriteBox(
-                        size: 13,
+                        size: 20,
                         padding: 5,
                         isFavorited: data['is_fav'],
                         onTap: onFavoriteTap,

@@ -36,7 +36,8 @@ class PopularItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius),
           boxShadow: [
             BoxShadow(
-              color: shadowColor.withOpacity(0.1),
+              color: Theme.of(context)
+                  .backgroundColor,
               spreadRadius: 1,
               blurRadius: 1,
               offset: const Offset(1, 1), // changes position of shadow
@@ -70,7 +71,8 @@ class PopularItem extends StatelessWidget {
                 height: 88,
                 padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                 decoration: BoxDecoration(
-                  color: cardColor,
+                  color: Theme.of(context)
+                      .backgroundColor,
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
@@ -88,10 +90,11 @@ class PopularItem extends StatelessWidget {
                       data["name"],
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: textColor,
+                      style:  TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context)
+                            .primaryColor.withAlpha(190),
                       ),
                     ),
                     const SizedBox(
@@ -115,8 +118,9 @@ class PopularItem extends StatelessWidget {
                                 data["name"],
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: textColor,
+                                style:  TextStyle(
+                                  color: Theme.of(context)
+                                      .primaryColor,
                                   fontSize: 12,
                                 ),
                               ),
@@ -124,8 +128,9 @@ class PopularItem extends StatelessWidget {
                                 data["name"],
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: labelColor,
+                                style:  TextStyle(
+                                  color: Theme.of(context)
+                                      .primaryColor,
                                   fontSize: 10,
                                 ),
                               ),
@@ -147,7 +152,9 @@ class PopularItem extends StatelessWidget {
                               ),
                               Text(
                                '${list['count']}',
-                                style: const TextStyle(fontSize: 12),
+                                style:  const TextStyle(fontSize: 15,
+                                color: Colors.black,
+                                ),
                               )
                             ],
                           ),

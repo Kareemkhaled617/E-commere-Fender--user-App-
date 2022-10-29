@@ -44,7 +44,7 @@ class _IntroductionAnimationScreenState
   Widget build(BuildContext context) {
     return Selector<ProviderController,bool>(builder:(context,value,child){
       if(value){
-        return HomePage();
+        return const HomePage();
       }else{
         return Scaffold(
           backgroundColor: const Color(0xffF7EBE1),

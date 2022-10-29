@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:test_provider/ui/login1/login_ui.dart';
 
@@ -17,6 +20,95 @@ class _LayerThreeState extends State<LayerThree> {
   bool checkedValue = false;
   bool checkboxValue = false;
   String? fName,lName,email,phone,pass;
+  File? imageFile;
+
+  void _showImageDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Please choose an option'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  onTap: _openCamera,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.camera,
+                          color: Colors.purple,
+                        ),
+                        SizedBox(
+                          width: 7,
+                        ),
+                        Text(
+                          'Camera',
+                          style: TextStyle(color: Colors.purple),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: _openGallery,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.image,
+                          color: Colors.purple,
+                        ),
+                        SizedBox(
+                          width: 7,
+                        ),
+                        Text(
+                          'Gallery',
+                          style: TextStyle(color: Colors.purple),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  void _openCamera() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+    );
+    if (pickedFile != null) {
+      final imageTemp = File(pickedFile.path);
+      setState(() {
+        imageFile = imageTemp;
+      });
+    } else {
+    }
+
+    Navigator.pop(context);
+  }
+
+  void _openGallery() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      final imageTemp = File(pickedFile.path);
+      setState(() {
+        imageFile = imageTemp;
+      });
+    } else {
+
+    }
+
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +122,79 @@ class _LayerThreeState extends State<LayerThree> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               const SizedBox(
-                height: 235,
+                height: 100,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Sign Up',
+                    style: TextStyle(
+                        fontSize: 48,
+                        fontFamily: 'Poppins-Medium',
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
+                  Flexible(
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width:80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 1, color: Colors.white),
+                                borderRadius: BorderRadius.circular(16)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: imageFile == null
+                                  ? Image.network(
+                                'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png',
+                                fit: BoxFit.fill,
+                              )
+                                  : Image.file(
+                                imageFile!,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: _showImageDialog,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.pink,
+                                border: Border.all(
+                                    width: 2, color: Colors.white),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  imageFile == null
+                                      ? Icons.add_a_photo
+                                      : Icons.edit_outlined,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+
               Container(
                 decoration: ThemeHelper().inputBoxDecorationShaddow(),
 

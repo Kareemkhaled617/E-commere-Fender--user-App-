@@ -89,7 +89,8 @@ class CartScreen extends StatelessWidget {
                       backgroundColor: MaterialStateProperty.all(Colors.orangeAccent),
                     ),
                     onPressed: cart.basketItems.isEmpty ? null : () {},
-                    child: const Text("Buy Now"),
+                    child:  Text("Buy Now",style: TextStyle(color:Theme.of(context)
+                        .primaryColor,fontSize: 18,fontWeight: FontWeight.w600),),
                   ),
                 ),
               ),
